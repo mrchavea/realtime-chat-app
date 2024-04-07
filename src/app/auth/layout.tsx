@@ -12,7 +12,7 @@ export default function AuthLayout({ children } : {children: React.ReactNode}) {
     <>
       <AnimatedBackground/>
       <main className="relative min-h-screen w-full">
-        <header className="w-full h-fit relative ml-auto top-[60px] inline-flex items-center justify-center text-6xl gap-2 font-extrabold">
+        <header className="w-full h-fit relative ml-auto top-[100px] inline-flex items-center justify-center text-6xl gap-2 font-extrabold">
           <div>
             <p>Bienvenido al <GradientText text="banco"/> del futuro</p>
           </div>
