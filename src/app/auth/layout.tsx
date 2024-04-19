@@ -1,5 +1,4 @@
-import GradientText from "@/components/GradientText";
-import { AnimatedBackground } from "@/components/ui/AnimatedBackground";
+import { AnimatedBackground, GradientText } from "@/presentation/shared";
 import { Card } from "@nextui-org/react";
 
 export default function AuthLayout({ children } : {children: React.ReactNode}) {

@@ -1,19 +1,20 @@
-"use client";
-
-import { useState } from "react";
-import { Controller, FieldValues, SubmitHandler, useForm } from "react-hook-form";
-import { FingerPrintIcon } from "@heroicons/react/24/solid";
+import { useContext, useState } from "react";
+import { Controller, SubmitHandler, set, useForm } from "react-hook-form";
 import { Button } from "@nextui-org/button";
 import { Checkbox, Input } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import { EyeFilledIcon, EyeSlashFilledIcon } from "@/presentation/shared/components";
+import { AuthContext, useAuthContext } from "../context/AuthContext";
 
 interface LogInCredentials{
   email:string,
   password:string
 }
 
-export const LogInForm = ({ children }: {children?:React.ReactNode | undefined}) => {
-  // const router = useRouter();
-  const [loading, setLoading] = useState(false);
+export const LogInForm = () => {
+  const {handleLogInCallback} = useAuthContext()
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [show, setShow] = useState(false);
   const {
@@ -32,27 +33,22 @@ export const LogInForm = ({ children }: {children?:React.ReactNode | undefined})
     },
   });
 
-  const onSubmit: SubmitHandler<LogInCredentials> = async (data) => {
+  const onSubmit: SubmitHandler<LogInCredentials> = async (form_data) => {
     // event.preventDefault();
     try {
       setError("");
-      setLoading(true);
-      //setFormValues({ email: "", password: "" });
+      setIsLoading(true);
 
-      const response:any = await fetch("http://localhost:3000/auth/login", {
-        method: 'POST',
-        body: JSON.stringify({email: data.email, password: data.password}),
-        headers: {"Content-type": "application/json; charset=UTF-8"}
-      })
+      const [success, errorMessage] = await handleLogInCallback(form_data)
+      if(!success) return setError(errorMessage)
 
-      setLoading(false);
+      router.push("/")
 
-      console.log("SIGIN", response);
-      // if (!response?.error) await logInRedirection();
-      // else setError("Contraseña o correo incorrecto");
     } catch (error) {
-      setLoading(false);
-      // setError(error);
+      setError("Error inesperado");
+    }
+    finally {
+      setIsLoading(false)
     }
   };
 
@@ -80,7 +76,7 @@ export const LogInForm = ({ children }: {children?:React.ReactNode | undefined})
         <div className="flex flex-col mt-4 w-full max-w-xs gap-4">
           <Input
             label="Email"
-            variant="underlined"
+            variant="bordered"
             radius="sm"
             onClear={() => console.log("clear")}
             errorMessage={errors.email && errors.email.message}
@@ -90,13 +86,26 @@ export const LogInForm = ({ children }: {children?:React.ReactNode | undefined})
           />
           <Input
             label="Contraseña"
-            variant="underlined"
+            variant="bordered"
             radius="sm"
-            onClear={() => console.log("clear")}
+            isClearable={false}
+            endContent={
+              <button className="h-6 w-6 focus:outline-none" type="button" onClick={()=> setShow(!show)}>
+                {show ? (
+                  <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                ) : (
+                  <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                )}              
+              </button>
+            }
+            type={show ? "text" : "password"}
             errorMessage={errors.password && errors.password.message}
             validationState={errors.password ? "invalid" : "valid"}
             {...passwordInput}
           />
+            {error && (
+              <p className="text-danger text-tiny font-medium pb-2 pt-1">{error}</p>
+            )}
         </div>
         {/* <Controller
           name="terms"
@@ -115,8 +124,8 @@ export const LogInForm = ({ children }: {children?:React.ReactNode | undefined})
             </Checkbox>
           )}
         /> */}
-        <div className="flex items-center gap-4 absolute bottom-10 right-10 ">
-          <Button variant="solid" radius="sm" type="submit" color="primary">
+        <div className="flex items-center gap-4 absolute bottom-10 right-10">
+          <Button size="md" variant="solid" radius="sm" type="submit" color="primary" isDisabled={isLoading} isLoading={isLoading}>
             Siguiente
           </Button>
         </div>

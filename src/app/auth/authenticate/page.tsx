@@ -1,26 +1,20 @@
 "use client"
 
-import GradientText from "@/components/GradientText";
-import { GradientContainer } from "@/components/ui/GradientContainer";
+import {GradientContainer} from "@/presentation/shared";
+import { LogInForm } from "@/presentation/user";
 import { Button, Card, Input, Link } from "@nextui-org/react";
 import { SunIcon } from "@radix-ui/react-icons";
-import { LogInForm } from "./LogInForm";
 
 
 export default function AuthenticatePage () {
-
-
-
     
-
-
     return (
         <>
         <GradientContainer>
 
             <Card className="z-20 rounded-xl border-white border-2 border-opacity-50 flex px-10 py-5 md:max-w-[920px] md:w-[50vw] h-full">
 
-                <div className="flex justify-between pt-10">
+                <div className="flex flex-col md:flex-row justify-between pt-10 gap-5">
                     <section className="w-[40%] h-full flex justify-start items-start text-left">
                         <h1 className="text-2xl font-bold">Inicia sesión</h1>
                     </section>
