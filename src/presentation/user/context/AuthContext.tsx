@@ -37,11 +37,11 @@ const AuthContextProvider : React.FC<{ children: ReactNode }> = ({children}) => 
         getAccessCookie(setAcessToken)
     }, [])
 
-    useEffect(()=>{
-        const refresh_timeout: NodeJS.Timeout | null = handleRefreshTimeout(access_token, setAcessToken)
-        console.log("REFRESH", refresh_timeout)
-        if(refresh_timeout) return () => clearTimeout(refresh_timeout)
-    }, [access_token])
+    // useEffect(()=>{
+    //     const refresh_timeout: NodeJS.Timeout | null = handleRefreshTimeout(access_token, setAcessToken)
+    //     console.log("REFRESH", refresh_timeout)
+    //     if(refresh_timeout) return () => clearTimeout(refresh_timeout)
+    // }, [access_token])
 
     function handleLogInCallback (form_data: LogInCredentials): Promise <[boolean, string]> {
         return handleLogIn(form_data, setAcessToken)
