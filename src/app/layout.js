@@ -1,5 +1,5 @@
 import "@/styles/globals.css";
-import { useAuthContext } from "@/presentation/user/context/AuthContext";
+import { useAuthContext } from "@/presentation/user/contexts/AuthContext";
 import Providers from "./providers";
 import AnalyticsWrapper from "./analytics";
 import { Poppins } from "next/font/google";

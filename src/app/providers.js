@@ -2,7 +2,7 @@
 
 import { ThemeProvider } from "next-themes";
 import { NextUIProvider } from "@nextui-org/react";
-import { AuthContextProvider } from "@/presentation/user/context/AuthContext";
+import { AuthContextProvider } from "@/presentation/user/contexts/AuthContext";
 
 export default function Providers({ children }) {
   return (

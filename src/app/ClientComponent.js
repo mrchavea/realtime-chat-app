@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuthContext } from "@/presentation/user/context/AuthContext";
+import { useAuthContext } from "@/presentation/user/contexts/AuthContext";
 
 export default function ClientComponent() {
   const { access_token } = useAuthContext();
