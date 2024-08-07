@@ -8,25 +8,25 @@ import { useAuthContext } from "../../user/contexts/AuthContext";
 import { useChat } from "../contexts/ChatContext";
 
 export default function ChatRoom({ ssr_chat }: { ssr_chat?: Chat }) {
-  // const { messages, currentChat, handleSendMessage, handleChangeChat } = useChatContext();
-  const [messages, setMessages] = useState<Array<Message>>([]);
-  const { handleSendMessage, handleOnMessage, handleChangeChat } = useChat();
   const { user: authenticatedUser } = useAuthContext();
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
-  const textAreaContainerRef = useRef<HTMLDivElement>(null);
+  const { handleSendMessage, handleOnMessage, handleChangeChat } = useChat();
   const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<Array<Message>>([]);
+  const $form = useRef<HTMLFormElement>(null);
+  const $textArea = useRef<HTMLTextAreaElement>(null);
+  const $textAreaContainer = useRef<HTMLDivElement>(null);
+  const $scrollabeContent = useRef<HTMLDivElement>(null);
   //Use memo with message
   const Message = memo(({ message }: { message: Message }) => {
     console.log("mensaje:", message, new Date(message.sent_date));
     return (
       <li
-        className={`gap-2 text-white w-fit rounded-md flex flex-row px-3 py-1 ${
+        className={`gap-2 text-white w-fit rounded-md flex flex-row px-3 py-2 ${
           message.from == authenticatedUser?.id ? "self-end bg-indigo-500" : "self-start bg-gray-500"
         }`}
       >
         <span className="text-[15px]">{message.text}</span>
-        <span className="mt-2 self-end text-[12px] text-gray-300">
+        <span className="pt-2 self-end text-[12px] text-gray-300">
           {new Date(message.sent_date).getHours() + ":" + new Date(message.sent_date).getHours()}
         </span>
       </li>
@@ -50,17 +50,22 @@ export default function ChatRoom({ ssr_chat }: { ssr_chat?: Chat }) {
       console.log("message?", message);
       setMessages((prev) => [...prev, message]);
     });
-    const textAreaContainer = textAreaContainerRef.current;
-    const textarea = textAreaRef.current;
+    const textAreaContainer = $textAreaContainer.current;
+    const textarea = $textArea.current;
 
     if (textAreaContainer) textAreaContainer.addEventListener("click", handleTextAreaFocus);
     if (textarea) textarea.addEventListener("keydown", handlePressEnter);
+    $scrollabeContent.current!.scrollTop = 0;
 
     return () => {
       if (textAreaContainer) textAreaContainer.removeEventListener("click", handleTextAreaFocus);
       if (textarea) textarea.removeEventListener("keydown", handlePressEnter);
     };
   }, []);
+
+  useEffect(() => {
+    if ($scrollabeContent.current) $scrollabeContent.current!.scrollTop = $scrollabeContent.current!.scrollHeight;
+  }, [messages]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -85,17 +90,17 @@ export default function ChatRoom({ ssr_chat }: { ssr_chat?: Chat }) {
     if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       const submitEvent = new Event("submit", { bubbles: true, cancelable: true });
-      formRef.current?.dispatchEvent(submitEvent);
+      $form.current?.dispatchEvent(submitEvent);
     }
   };
 
   const handleTextAreaFocus = () => {
-    if (textAreaRef.current) textAreaRef.current.focus();
+    if ($textArea.current) $textArea.current.focus();
   };
 
   return (
     <>
-      <div className="relative flex flex-col flex-nowrap w-full min-h-screen h-full ">
+      <div className="relative flex flex-col flex-nowrap w-full min-h-screen h-full">
         <nav className="sticky top-0  flex w-full justify-between items-center min-h-[70px] border-b-1 border-gray-800 border-opacity-30 bg-gray-700">
           {/* <nav className="max-w-[1000px] m-auto bg-slate-100 w-7 h-7 rounded-full ml-5"></nav> */}
           <UserAvatar
@@ -118,17 +123,21 @@ export default function ChatRoom({ ssr_chat }: { ssr_chat?: Chat }) {
             </Button>
           </div>
         </nav>
-        <main className="h-full w-full px-10 pt-10 mb-[20px]">
-          <ul className="text-xl flex flex-col gap-4">
+        <main
+          ref={$scrollabeContent}
+          className="flex justify-center h-[calc(100vh-110px-70px-15px)] w-full px-10 pt-6 overflow-y-auto scroll-smooth"
+        >
+          <ul className="text-xl flex flex-col gap-4 w-full md:max-w-2xl">
             {messages.map((message) => (
               <Message key={message.id} message={message} />
             ))}
+            <br></br>
           </ul>
         </main>
-        <footer className="sticky bottom-5 px-10 pb-5 w-full h-[110px]">
+        <footer className="bg-gray-700 px-10 w-full h-[110px]">
           <form
             id="chatForm"
-            ref={formRef}
+            ref={$form}
             className="justify-center items-center w-full inline-flex gap-4"
             onSubmit={(event) => handleSubmit(event)}
           >
@@ -138,11 +147,11 @@ export default function ChatRoom({ ssr_chat }: { ssr_chat?: Chat }) {
               </Button>
             </div>
             <div
-              ref={textAreaContainerRef}
-              className="max-w-[700px] w-full cursor-text relative bg-zinc-800 px-4 py-3 text-sm font-normal bg-clip-padding rounded-md transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
+              ref={$textAreaContainer}
+              className="max-w-[750px] w-full cursor-text relative bg-zinc-800 px-4 py-3 text-sm font-normal bg-clip-padding rounded-md transition ease-in-out m-0 focus:text-gray-700 focus:outline-none"
             >
               <textarea
-                ref={textAreaRef}
+                ref={$textArea}
                 value={message}
                 autoComplete="off"
                 onChange={(message) => setMessage(message.target.value)}

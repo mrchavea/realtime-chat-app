@@ -10,7 +10,7 @@ export default function ChatLayout({ children }: { children: React.ReactNode }) 
   const data: Array<Chat> = [chat1, chat2];
   console.log("SERVER SIDE DATA", data);
   return (
-    <div className="flex w-full h-full">
+    <div className="flex w-full">
       <ChatList chats={data} />
       <section className="bg-gray-700 sm:pl-[270px] w-full">{children}</section>
     </div>

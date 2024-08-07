@@ -4,7 +4,7 @@ import ChatProviders from "./chat.providers";
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <ChatProviders>
-      <ChatLayout>{children}</ChatLayout>;
+      <ChatLayout>{children}</ChatLayout>
     </ChatProviders>
   );
 }

@@ -59,7 +59,7 @@ export default function ChatList({ chats }: { chats: Array<Chat> }) {
       <aside
         ref={sidebarRef}
         id="separator-sidebar"
-        className={`fixed top-0 left-0 z-40 w-[270px] h-screen transition-transform ${
+        className={`fixed top-0 left-0 z-40 w-[270px] h-full transition-transform ${
           isSidebarOpen ? "" : "-translate-x-full"
         } sm:translate-x-0`}
         aria-label="Sidebar"
