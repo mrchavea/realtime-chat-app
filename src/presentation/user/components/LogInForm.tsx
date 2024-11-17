@@ -44,6 +44,7 @@ export const LogInForm = () => {
 
       router.push("/");
     } catch (error) {
+      console.log(error);
       setError("Error inesperado");
     } finally {
       setIsLoading(false);
@@ -86,11 +87,7 @@ export const LogInForm = () => {
           isClearable={false}
           endContent={
             <button className="h-6 w-6 focus:outline-none" type="button" onClick={() => setShow(!show)}>
-              {show ? (
-                <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              ) : (
-                <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
-              )}
+              {show ? <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" /> : <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />}
             </button>
           }
           type={show ? "text" : "password"}
